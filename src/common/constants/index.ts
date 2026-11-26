@@ -5,7 +5,7 @@ export const BACKDROP_IMAGE = getCloudinaryUrl('/backdrop')
 export const PROFILE_URL = getCloudinaryUrl('/profile')
 export const RESUME_URL = getCloudinaryUrl('/resume')
 
-export const DEVTO_PROFILE = 'https://dev.to/ezzeddp'
+export const DEVTO_PROFILE = 'https://dev.to/ezzeddinp'
 export const DEVTO_BLOG_API = 'https://dev.to/api/articles?username=ezzeddinp'
 
 export const PAGESPEED_URL = 'https://pagespeed.web.dev/'

@@ -1,12 +1,11 @@
 import NavbarMain from '@/app/components/navigation/navbar';
 import './globals.css';
+import './portfolio.css';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from './components/theme-provider';
 import Layouts from '@/common/components/layouts/index';
-import GradientMain from '@/components/ui/gradient/page';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 const inter = Inter({ subsets: ['latin'] });
-import { Suspense } from 'react';
 
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -47,7 +46,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: `${siteUrl}`,
+        url: '/opengraph-image',
         width: 1200,
         height: 630,
         alt: "Zeddin's portfolio hero section",
@@ -59,7 +58,7 @@ export const metadata: Metadata = {
     title: "Zeddin's Portfolio",
     description: 'Discover software projects, writing, and experience by Mohammad Ezzeddin Pratama.',
     creator: '@ezzeddinp',
-    images: [`${siteUrl}`],
+    images: ['/opengraph-image'],
   },
   robots: {
     index: true,
@@ -73,19 +72,16 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.svg',
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-  },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
-  ],
+};
+
+export const viewport: Viewport = {
+  width: 'device-width', initialScale: 1,
+  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#ffffff' }, { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' }],
 };
 
 export default function RootLayout({
@@ -94,29 +90,24 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} overflow-hidden dark:bg-black`}>
-        <Analytics />
-        <SpeedInsights />
-        {/* <GradientMain> */}
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <body className={`${inter.className} dark:bg-black`}>
+        {process.env.VERCEL === '1' && <><Analytics /><SpeedInsights /></>}
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
           >
             <div
-              className={`z-20 relative min-h-screen mx-auto max-w-full bg-gradient-to-b from-white via-gray-100 to-gray-50 dark:bg-gradient-to-b/80 dark:from-black/75 dark:via-black/80 dark:to-zinc-950/85  transition duration-500 w-full overflow-x-hidden`}
+              className="portfolio-shell"
 
             >
               <NavbarMain className='z-50' />
-              <Suspense>
                 <Layouts>
                   {children}
                 </Layouts>
-              </Suspense>
             </div>
           </ThemeProvider>
-        {/* </GradientMain> */}
       </body>
     </html>
   );

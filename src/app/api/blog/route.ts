@@ -1,18 +1,12 @@
 import { NextResponse } from 'next/server'
+import { getBlogData } from '../../../../services/blog'
 
-import axios from 'axios'
-
-export const GET = async () => {
-  const DEV_TO_URL = 'https://dev.to/api/articles/me'
-  const headers = {
-    'api-key': process.env.DEVTO_KEY
-  }
+export async function GET() {
   try {
-    const response = await axios.get(DEV_TO_URL, {
-      headers
+    return NextResponse.json({ status: true, data: await getBlogData() }, {
+      headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400' },
     })
-    return NextResponse.json({ status: true, data: response.data }, { status: 200 })
-  } catch (error) {
-    return NextResponse.json({ status: false, error }, { status: 400 })
+  } catch {
+    return NextResponse.json({ status: false, error: 'Articles are temporarily unavailable.' }, { status: 503 })
   }
 }

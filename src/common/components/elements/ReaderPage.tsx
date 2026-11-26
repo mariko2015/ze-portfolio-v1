@@ -1,22 +1,27 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 import Breakline from '@/common/components/elements/Breakline'
 import CommentList from '@/common/components/elements/CommentList'
 import MDXComponent from '@/common/components/elements/MDXComponent'
-import { PLACEHOLDER_URL } from '@/common/constants'
-import { BlogDetailProps, CommentItemProps } from '@/common/types/blog'
+import { BlogDetailProps } from '@/common/types/blog'
+import { getComments } from '../../../../services/blog'
 
 import ReaderHeader from './ReaderHeader'
 
 interface ReaderProps {
   content: BlogDetailProps
-  comments: CommentItemProps[]
-  pageViewCount: number
 }
 
-export default function ReaderPage({ content, comments, pageViewCount }: ReaderProps) {
-  const { cover_image, title, body_markdown, comments_count, published_at, tags, reading_time_minutes, id, url } =
+async function ArticleComments({ id, count }: { id: number; count: number }) {
+  if (count === 0) return <CommentList id={id} totalComments={0} comments={[]} />
+  const comments = await getComments(id)
+  if (count > 0 && !comments.length) return <p className="py-6">Read the latest comments on DEV Community.</p>
+  return <CommentList id={id} totalComments={count} comments={comments} />
+}
+
+export default function ReaderPage({ content }: ReaderProps) {
+  const { title, body_markdown, comments_count, published_at, tags, reading_time_minutes, id, url } =
     content
   return (
     <>
@@ -25,19 +30,8 @@ export default function ReaderPage({ content, comments, pageViewCount }: ReaderP
         comments_count={comments_count}
         reading_time_minutes={reading_time_minutes}
         published_at={published_at}
-        page_views_count={pageViewCount}
       />
-      <div className="space-y-6 leading-[1.8] text-black dark:text-neutral-300 ">
-        {/* <div className="overflow-hidden">
-          <Image
-            src={cover_image || PLACEHOLDER_URL}
-            width={800}
-            height={500}
-            alt={title}
-            className="transition-all duration-700 hover:scale-105"
-            priority
-          />
-        </div> */}
+      <div className="article-markdown space-y-6 leading-[1.8] text-black dark:text-neutral-300">
         {body_markdown && <MDXComponent>{body_markdown}</MDXComponent>}
       </div>
       {tags?.length >= 1 && (
@@ -58,12 +52,14 @@ export default function ReaderPage({ content, comments, pageViewCount }: ReaderP
       <Breakline className="!my-10" />
       <div className="mb-4 flex flex-col space-y-2 text-black dark:text-neutral-300">
         <h3 className="text-lg font-medium">Comment on DEV Community:</h3>
-        <Link href={url} target="_blank" className="text-blue-600">
+        <Link href={url} target="_blank" rel="noopener noreferrer" className="break-all text-blue-600">
           {url}
         </Link>
       </div>
       <div className='text-black dark:text-neutral-300'>
-        <CommentList id={id} totalComments={comments_count} comments={comments} />
+        <Suspense fallback={<p role="status" className="py-6">Loading comments...</p>}>
+          <ArticleComments id={id} count={comments_count} />
+        </Suspense>
       </div>
     </>
   )

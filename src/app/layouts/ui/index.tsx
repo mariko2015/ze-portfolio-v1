@@ -1,4 +1,4 @@
-// src/app/layouts/ui/page.tsx
+// src/app/layouts/ui.tsx
 
 import React from 'react';
 import CardDetailClient from '@/app/components/CardDetailClient';

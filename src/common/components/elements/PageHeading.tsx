@@ -1,6 +1,3 @@
-import {Poppins} from 'next/font/google';
-const P600 = Poppins({ weight: "700", subsets: ["latin"] });
-
 interface PageHeadingProps {
   title: string
   description?: string

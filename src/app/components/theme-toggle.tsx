@@ -13,7 +13,7 @@ export function ModeToggle() {
     setMounted(true)
   }, [])
 
-  if (!mounted) return null
+  if (!mounted) return <span aria-hidden="true" className="inline-block h-10 w-10" />
 
   const toggleTheme = () => {
     setTheme(resolvedTheme === "light" ? "dark" : "light")
@@ -31,7 +31,7 @@ export function ModeToggle() {
         <>
           <Sun
             className="h-[14px] w-[14px] rotate-0 scale-100 transition-all"
-            color="#FFD700"
+            color="currentColor"
           />
           <span className="sr-only">Switch to dark mode</span>
         </>
@@ -39,7 +39,7 @@ export function ModeToggle() {
         <>
           <Moon
             className="h-[14px] w-[14px] rotate-0 scale-100 transition-all"
-            color="#FFFFFF"
+            color="currentColor"
           />
           <span className="sr-only">Switch to light mode</span>
         </>

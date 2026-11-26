@@ -24,14 +24,15 @@ const MDXComponent = ({ children }: MarkdownRendererProps) => {
       remarkPlugins={[remarkGfm]}
       components={{
         a: props => (
-          <a className="cursor-pointer text-teal-600 hover:text-teal-400 hover:underline" target="_blank" {...props} />
+          <a className="cursor-pointer text-teal-600 hover:text-teal-400 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />
         ),
-        p: props => <div {...props} className="font-sans" />,
+        p: props => <p {...props} className="my-4 font-sans" />,
         h2: props => <h2 className="font-sans text-xl font-medium dark:text-neutral-300" {...props} />,
         h3: props => <h3 className="pt-4 text-[18px] font-medium leading-snug dark:text-neutral-300" {...props} />,
         ul: props => <ul className="list-disc space-y-3 pb-5 pl-10 font-sans" {...props} />,
         ol: props => <ol className="list-decimal space-y-3 pb-5 pl-10 font-sans" {...props} />,
-        code: props => <CodeBlock {...props} />,
+        pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
+        img: ({ node, ...props }) => <img {...props} loading="lazy" decoding="async" className="my-6 h-auto max-w-full rounded-lg" />,
         blockquote: props => (
           <blockquote
             className="text-md rounded-lg border-l-[5px] border-neutral-700 border-l-cyan-500 bg-neutral-100 py-3 pl-6 text-cyan-800 dark:bg-neutral-800 dark:text-cyan-200"

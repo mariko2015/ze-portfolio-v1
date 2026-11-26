@@ -2,7 +2,7 @@
 
 'use client';
 
-import CardDetail from '@/app/components/detail-project/page';
+import CardDetail from '@/app/components/detail-project';
 import React from 'react';
 
 interface CardDetailClientProps {

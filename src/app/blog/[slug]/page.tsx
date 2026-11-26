@@ -1,76 +1,44 @@
-import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-
-import { getBlogDetail, getComments } from '../../../../services/blog'
-import { getBlogViews } from '../../../../services/view'
-
+import type { Metadata } from 'next'
+import { notFound, permanentRedirect } from 'next/navigation'
+import { getBlogDetail } from '../../../../services/blog'
 import BackButton from '@/common/components/elements/BackButton'
 import Container from '@/common/components/elements/Container'
 import ReaderPage from '@/common/components/elements/ReaderPage'
-import { METADATA } from '@/common/constants/metadata'
-import Layouts from '@/common/components/layouts/indexForBlog'
+import snapshot from '@/content/blog.json'
 
-type SearchParams = { [key: string]: string | string[] | undefined }
+type Props = { params: Promise<{ slug: string }> }
+export const revalidate = 3600
 
-type Props = {
-  params: Promise<{ slug: string }>
-  searchParams: Promise<SearchParams>
-}
+// Pre-render known posts; new posts are generated on demand and revalidated hourly.
+export function generateStaticParams() { return snapshot.list.map(article => ({ slug: article.slug })) }
 
-function extractArticleId(searchParams: SearchParams | null | undefined): string | null {
-  if (!searchParams) return null
-  const rawId = searchParams.id
-  if (Array.isArray(rawId)) {
-    return rawId.length ? rawId[0] ?? null : null
-  }
-  return rawId ?? null
-}
-
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
-  const [resolvedParams, resolvedSearchParams] = await Promise.all([params, searchParams])
-  const articleId = extractArticleId(resolvedSearchParams)
-  const blog = await getBlogDetail({ id: articleId, slug: resolvedParams.slug })
-  if (!blog) {
-    return {
-      title: METADATA.exTitle,
-      description: METADATA.description
-    }
-  }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const blog = await getBlogDetail({ slug: (await params).slug })
+  if (!blog) return { title: 'Article not found', robots: { index: false } }
+  const canonical = `/blog/${blog.slug}`
   return {
-    title: `${blog.title} ${METADATA.exTitle}`,
+    title: blog.title,
     description: blog.description,
+    alternates: { canonical },
     openGraph: {
-      images: blog.cover_image,
-      url: `${process.env.DOMAIN}/${blog.slug}`,
-      siteName: METADATA.openGraph.siteName,
-      locale: METADATA.openGraph.locale,
-      type: 'article',
-      authors: blog.user.name
+      title: blog.title, description: blog.description, url: canonical,
+      type: 'article', authors: [blog.user.name], publishedTime: blog.published_at,
+      ...(blog.cover_image ? { images: [blog.cover_image] } : {}),
     },
-    keywords: blog.title,
-    alternates: {
-      canonical: `${process.env.DOMAIN}/${blog.slug}`
-    }
   }
 }
 
-export default async function BlogDetailPage({ params, searchParams }: Props) {
-  const [resolvedParams, resolvedSearchParams] = await Promise.all([params, searchParams])
-  const articleIdFromQuery = extractArticleId(resolvedSearchParams)
-  const blog = await getBlogDetail({ id: articleIdFromQuery, slug: resolvedParams.slug })
-  if (!blog) {
-    notFound()
-  }
-
-  const articleId = blog.id
-  const pageViewCount = await getBlogViews(articleId)
-  const comments = await getComments(articleId)
+export default async function BlogDetailPage({ params }: Props) {
+  const { slug } = await params
+  const blog = await getBlogDetail({ slug })
+  if (!blog) notFound()
+  if (slug !== blog.slug) permanentRedirect(`/blog/${blog.slug}`)
   return (
-    <Layouts className='lg:flex lg:flex-col lg:items-center lg:justify-center'>
-      <Container data-aos="fade-left">
+    <div className="flex justify-center">
+      <Container>
         <BackButton url="/blog" />
-        <ReaderPage content={blog} pageViewCount={pageViewCount} comments={comments} />
+        <ReaderPage content={blog} />
       </Container>
-    </Layouts>
+    </div>
   )
 }

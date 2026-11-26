@@ -23,6 +23,7 @@ export default function ViewOptions({ option, setViewOption, icon, type, label }
       data-umami-event={`Change Blog View to ${type}`}
   aria-label={label}
       type="button"
+      aria-pressed={isActive}
     >
       {icon}
     </button>

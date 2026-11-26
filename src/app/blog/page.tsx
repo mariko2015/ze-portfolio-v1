@@ -1,67 +1,43 @@
-import { Metadata } from 'next'
-
+import type { Metadata } from 'next'
+import { Suspense } from 'react'
+import { connection } from 'next/server'
 import Container from '@/common/components/elements/Container'
-import PageHeading from '../../common/components/elements/PageHeading'
-import { METADATA } from '../../common/constants/metadata'
-import clsxm from '@/common/libs/clsxm'
-
 import Blog from '../../../modules/blog'
+import { getBlogData } from '../../../services/blog'
 import Footer from '../components/Footer/footer'
 
-export const metadata = {
-  title: "Mohammad Ezzeddin Pratama | Full-Stack Developer",
-  description:
-    "Portfolio of Mohammad Ezzeddin Pratama — a full-stack developer specializing in React, Next.js, and Supabase. Passionate about building impactful web and mobile apps.",
-  keywords: [
-    "Mohammad Ezzeddin Pratama",
-    "Mohammad Mohammad Ezzeddin Pratama",
-    "Ezzeddin",
-    "Ezzeddin Portofolio",
-    "Full-stack developer",
-    "Next.js portfolio",
-    "React developer",
-    "Indonesia developer",
-    "Supabase projects",
-    "React Native"
-  ],
-  authors: [{ name: "Mohammad Ezzeddin Pratama" }],
-  openGraph: {
-    title: "Mohammad Ezzeddin Pratama | Full-Stack Developer",
-    description:
-      "Explore projects and case studies by Mohammad Ezzeddin Pratama — Next.js, Supabase, and AI-powered applications.",
-    url: "https://zeds.studio",
-    siteName: "Ezzeddin Portfolio",
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Mohammad Ezzeddin Pratama | Full-Stack Developer",
-    description: "Building web apps with Next.js, Supabase, and AI.",
-    images: ["https://zeds.studio"],
-  },
+export const metadata: Metadata = {
+  title: 'Blog',
+  description: 'Technical writing on software engineering, AI, and practical lessons by Mohammad Ezzeddin Pratama.',
+  alternates: { canonical: '/blog' },
+  openGraph: { title: 'Blog | Mohammad Ezzeddin Pratama', url: '/blog', type: 'website' },
 }
 
-
-const PAGE_TITLE = 'Blog'
-const PAGE_DESCRIPTION = 'Exploring the world of code, creativity, and constant learning.'
-
-
-export default async function BlogPage() {
-  return (
-    <>
-      {/* <div className={clsxm([
-        'w-[650px] h-[400px] rounded-full',
-        'bg-gradient-to-r from-white/15 to-[#0f3324]/30 blur-[150px]',
-        'absolute top-0 slide-in-from-left-3 lg:left-0 z-[-2]', // Adjusted for simplicity
-      ])} /> */}
-      <div className='flex flex-col justify-stretch items-center'>
-        <Container data-aos="fade-left">
-          <PageHeading title={PAGE_TITLE} description={PAGE_DESCRIPTION} />
-          <Blog />
-        </Container>
+async function Articles() {
+  try {
+    return <Blog blogs={await getBlogData()} />
+  } catch {
+    // An upstream outage must not publish a cached empty/error listing.
+    await connection()
+    return (
+      <div role="status" className="py-12 text-neutral-700 dark:text-neutral-300">
+        <p>Articles are temporarily unavailable. Please try again shortly.</p>
+        <a href="https://dev.to/ezzeddinp" className="mt-4 inline-block text-teal-600 underline">Read on DEV Community</a>
       </div>
-      <Footer />
-    </>
-  )
+    )
+  }
+}
+
+export default function BlogPage() {
+  return <>
+    <section className="blog-hero section-shell"><p className="section-eyebrow">THE BLOG</p><h1>Thinking out loud.</h1><p>Notes on software, AI, and the things<br className="hidden sm:block" /> learned along the way.</p></section>
+    <div className="blog-content">
+      <Container>
+        <Suspense fallback={<p role="status" className="py-12">Loading articles...</p>}>
+          <Articles />
+        </Suspense>
+      </Container>
+    </div>
+    <Footer />
+  </>
 }

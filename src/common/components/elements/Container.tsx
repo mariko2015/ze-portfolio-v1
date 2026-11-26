@@ -1,23 +1,14 @@
-'use client'
+import { HTMLAttributes } from 'react'
 
-import { useSearchParams } from 'next/navigation'
-
-import { ReactNode } from 'react'
-
-interface ContainerProps {
-  children: ReactNode
-  className?: string
-  [propName: string]: ReactNode | string | undefined
+interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   withMarginTop?: boolean
 }
 
 export default function Container({ children, className = '', withMarginTop = true, ...others }: ContainerProps) {
-  const searchParams = useSearchParams()
-  const readMode = searchParams?.get('read-mode')
   return (
     <div
       data-testid="container"
-      className={`mb-10 ${(readMode !== 'true' || withMarginTop) && 'mt-6'} p-4 md:p-8 lg:max-w-3xl ${className}`}
+      className={`mb-10 w-full ${withMarginTop ? 'mt-6' : ''} p-4 md:p-8 lg:max-w-4xl ${className}`}
       {...others}
     >
       {children}

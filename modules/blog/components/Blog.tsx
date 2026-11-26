@@ -1,14 +1,9 @@
 'use client'
 
-import { fetcher } from '../../../services/fetcher'
 import clsx from 'clsx'
-import { motion } from 'framer-motion'
-import useSWR from 'swr'
-import { useDeferredValue, useMemo, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 
 import EmptyState from '@/common/components/elements/EmptyState'
-import LoadingCard from '@/common/components/elements/LoadingCard'
-import { DEVTO_BLOG_API } from '@/common/constants'
 import { BlogItem } from '@/common/types/blog'
 
 import { useBlogView } from '../../../stores/blog-view'
@@ -17,10 +12,12 @@ import useIsMobile from '../../../hooks/useIsMobile'
 import BlogCard from './BlogCard'
 import BlogListHeader from './BlogListHeader'
 
-export default function Blog() {
+export default function Blog({ blogs }: { blogs: BlogItem[] }) {
   const isMobile = useIsMobile()
   const [searchTerm, setSearchTerm] = useState<string>('')
   const { viewOption, setViewOption } = useBlogView()
+
+  useEffect(() => { void useBlogView.persist.rehydrate() }, [])
 
   const handleViewChange = (option: 'grid' | 'list') => {
     setViewOption(option)
@@ -29,13 +26,6 @@ export default function Blog() {
   const normalizedSearch = searchTerm.trim().toLowerCase()
   const deferredSearchTerm = useDeferredValue(normalizedSearch)
 
-  const { data, isLoading } = useSWR(DEVTO_BLOG_API, fetcher, {
-    revalidateOnMount: true
-  })
-
-  const blogs = useMemo(() => {
-    return data?.filter((blog: BlogItem) => blog.collection_id === null) || []
-  }, [data])
 
   const filteredBlogs = useMemo(() => {
     if (!deferredSearchTerm) {
@@ -57,10 +47,10 @@ export default function Blog() {
   const resolvedViewOption: 'grid' | 'list' = isMobile ? 'grid' : (viewOption === 'list' ? 'list' : 'grid')
 
   const itemsWrapperClass = clsx(
-    'mt-8 w-full',
+    'blog-results w-full',
     resolvedViewOption === 'list'
-      ? 'flex flex-col gap-8'
-      : 'grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3'
+      ? 'blog-results-list'
+      : 'blog-results-grid'
   )
 
   const header = (
@@ -74,19 +64,6 @@ export default function Blog() {
       isMobile={isMobile}
     />
   )
-
-  if (isLoading) {
-    return (
-      <div className="space-y-8">
-        {header}
-        <div className={itemsWrapperClass}>
-          {[1, 2, 3].map(item => (
-            <LoadingCard key={item} view={resolvedViewOption} />
-          ))}
-        </div>
-      </div>
-    )
-  }
 
   if (!blogs.length) {
     return (
@@ -112,16 +89,13 @@ export default function Blog() {
     <div className="space-y-8">
       {header}
       <div className={itemsWrapperClass}>
-        {filteredBlogs.map((item: BlogItem, index: number) => (
-          <motion.div
+        {filteredBlogs.map((item: BlogItem) => (
+          <div
             key={item.id}
             className="group h-full"
-            initial={{ opacity: 0, translateY: 12 }}
-            animate={{ opacity: 1, translateY: 0 }}
-            transition={{ duration: 0.35, delay: index * 0.06 }}
           >
             <BlogCard view={resolvedViewOption} {...item} />
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

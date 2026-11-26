@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import Container from "@/app/container/page";
+import Container from "@/app/container";
 import Image from "next/image";
 import { SiGithub } from 'react-icons/si';
 import Link from 'next/link';

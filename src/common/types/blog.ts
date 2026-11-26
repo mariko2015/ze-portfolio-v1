@@ -25,14 +25,14 @@ export type BlogItem = {
   published_timestamp: string
   body_markdown: string
   positive_reactions_count: number
-  cover_image: string
+  cover_image: string | null
   tag_list: string[]
   canonical_url: string
   reading_time_minutes: number
   user: UserProps
   db_views_count: number
   total_views_count: number
-  collection_id: number
+  collection_id: number | null
   created_at: string
 }
 
@@ -50,7 +50,7 @@ export type BlogDetailProps = {
   collection_id: number | null
   published_timestamp: string
   positive_reactions_count: number
-  cover_image: string
+  cover_image: string | null
   social_image: string
   canonical_url: string
   created_at: string

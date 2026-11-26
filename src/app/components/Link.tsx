@@ -40,6 +40,7 @@ const Element: React.FC<Props> = ({ target, text, url, size = "text-base", theme
     <ElementTag
     target={target}
       href={url}
+      rel={target === '_blank' ? 'noopener noreferrer' : undefined}
       className={`group flex w-fit items-center gap-1 text-sm font-serif italic ${size} ${themes[theme].join(
         " "
       )} ${flip ? "flex-row-reverse" : "flex-row"}`}

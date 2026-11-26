@@ -1,6 +1,6 @@
 import { STACKS, STACK_COLORS } from '@/common/constants/stacks'
 import { SkillDefinition } from '@/common/constants/skills'
-import { CSSProperties, useMemo } from 'react'
+import { CSSProperties } from 'react'
 
 type SkillCardProps = {
   skill: SkillDefinition
@@ -9,24 +9,19 @@ type SkillCardProps = {
 export default function SkillCard({ skill }: SkillCardProps) {
   const icon = STACKS[skill.name]
 
-  const palette = useMemo(() => {
-    return (
+  const palette = (
       STACK_COLORS[skill.name] ?? {
         light: 'rgba(148, 163, 184, 0.15)',
         dark: 'rgba(30, 41, 59, 0.2)',
         accent: 'rgba(148, 163, 184, 0.35)'
       }
     )
-  }, [skill.name])
 
-  const cardStyle = useMemo(
-    () => ({
+  const cardStyle = ({
       '--stack-tint-light': palette.light,
       '--stack-tint-dark': palette.dark,
       '--stack-accent': palette.accent
-    }) as CSSProperties,
-    [palette]
-  )
+    }) as CSSProperties
 
   return (
     <div
@@ -39,8 +34,8 @@ export default function SkillCard({ skill }: SkillCardProps) {
         {icon}
       </div>
       <div className="relative z-[1] flex min-h-[48px] flex-col items-center justify-center space-y-1">
-        <h3 className="text-[0.68rem] font-semibold text-neutral-800 dark:text-white">{skill.name}</h3>
-        <p className="text-[0.6rem] uppercase text-neutral-500 dark:text-neutral-400">
+        <h3 className="text-sm font-semibold text-neutral-800 dark:text-white">{skill.name}</h3>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {skill.category}
         </p>
       </div>

@@ -9,7 +9,9 @@
 # testing
 /coverage
 
-package-lock.json
+.npm-cache/
+.qa/
+*.tsbuildinfo
 
 # next.js
 /.next/

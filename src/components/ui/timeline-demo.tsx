@@ -1,148 +1,26 @@
-import React from "react";
-import { Timeline } from "@/components/blocks/ui/timeline";
+import { CERTIFICATION_GROUPS } from '@/common/constants/certifications'
+
+const topics: Record<number, string> = { 2026: 'New frontiers. AI and exploration.', 2025: 'Engineering in practice.', 2024: 'Building the foundations.' }
 
 export function TimelineDemo() {
-  const data = [
-        {
-      title: "2025",
-      content: (
-        <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            JPMorgan Chase & Co - Software Engineering Job Simulation
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            Forage | Jan 2025
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            ID Kredensial: 4EXGQRKDGZRL | Keahlian: Apache Kafka · Spring Boot · REST API
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-        </div>
-      ),
-    },
-    {
-      title: "2024",
-      content: (
-        <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            Cloud Practitioner Essentials AWS
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            Dicoding Academy | Agu 2023 - Agu 2027
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            ID Kredensial: 4EXGQRKDGZRL | Keahlian: Amazon Web Services (AWS) · Cloud Computing
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            GDSC Web Development
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            Google Developer Student Club | Agu 2023 - Agu 2027
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            Keahlian: React.js · TypeScript
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            SQL Course
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            Dicoding Academy | Agu 2023 - Agu 2027
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            ID Kredensial: EYX40K92WPDL
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            Data Science Course
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            Dicoding Academy | Jun 2024 - Jun 2027
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            ID Kredensial: GRX5Q3E22Z0M
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            Project Management Course
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            Dicoding Academy | Jan 2024 - Jan 2027
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            ID Kredensial: 07Z6W3QMRZQR | Keahlian: Project Management
-          </p>
-        </div>
-      ),
-    },
-    {
-      title: "2023",
-      content: (
-        <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            Problem Solving
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            HackerRank | Sep 2023
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            ID Kredensial: 1E30B58EB6EA
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            React (Basic)
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            HackerRank | Sep 2023
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            ID Kredensial: 3041AF28A842
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            Back End Development and APIs
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            FreeCodeCamp | Jul 2023 - Jul 2026
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            Proyek: Timestamp Microservice, Request Header Parser Microservice, URL Shortener Microservice, Exercise Tracker, File Metadata Microservice
-          </p>
-
-          <div className="border-t border-neutral-800 dark:border-neutral-200 my-4" />
-
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-semibold py-2">
-            Apple Developer Academy at Binus
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-300 text-xs md:text-sm font-normal py-1">
-            Agu 2023 -  Aug 2023
-          </p>
-          <p className="text-neutral-800 dark:text-neutral-500 text-xs md:text-sm font-normal py-2">
-            Peran: Hacker | Inovasi IoT di bidang pertanian
-          </p>
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <div className="w-full">
-      <Timeline data={data} />
-    </div>
-  );
+  return <div className="certification-timeline">
+    {CERTIFICATION_GROUPS.map(group => <section key={group.year} className="certification-year" aria-labelledby={`year-${group.year}`}>
+      <div className="year-heading"><h2 id={`year-${group.year}`}>{group.year}</h2><p>{topics[group.year]}</p></div>
+      <ul className={`certification-grid ${group.year === 2026 ? 'certifications-latest' : ''}`}>
+        {group.items.map(item => <li key={item.title} className={`certification-card ${item.issuer.startsWith('NASA') ? 'nasa-certification' : ''}`}>
+          <div className="certificate-brand" aria-hidden="true">{item.issuer.startsWith('NASA') ? <span className="nasa-mark">NASA</span> : item.issuer === 'DeepLearning.AI' ? <span className="deeplearning-mark">DeepLearning<span>.AI</span></span> : <span className="issuer-mark">{item.issuer === 'Forage' ? 'Forage' : 'Dicoding'}</span>}</div>
+          <p className="certificate-type">{item.issuer.startsWith('NASA') ? 'SPACE & SCIENTIFIC SYSTEMS' : item.issuer === 'DeepLearning.AI' ? 'ARTIFICIAL INTELLIGENCE' : 'PROFESSIONAL DEVELOPMENT'}</p>
+          <h3>{item.title}</h3>
+          <p className="certificate-issuer">{item.issuer}</p>
+          <p className="certificate-date">Issued {item.issued}{item.expires ? ` · Expires ${item.expires}` : ''}</p>
+          {item.description && <p className="certificate-description">{item.description}</p>}
+          {item.skills.length > 0 && <ul aria-label="Skills" className="certificate-skills">{item.skills.map(skill => <li key={skill}>{skill}</li>)}</ul>}
+          <div className="certificate-bottom">
+            {item.credentialId && <details className="credential-details"><summary>Credential details</summary><p>Credential ID: {item.credentialId}</p></details>}
+            {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" className="credential-link">{item.linkLabel ?? 'Show credential'}</a>}
+          </div>
+        </li>)}
+      </ul>
+    </section>)}
+  </div>
 }
